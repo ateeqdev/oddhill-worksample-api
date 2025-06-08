@@ -42,6 +42,7 @@ class GenreController extends Controller
 
     public function store(GenreRequest $request): JsonResponse
     {
+        $this->authorize('create', Genre::class);
         $genre = $this->genre_service->createGenre($request->validated());
 
         return response()->json([
@@ -53,6 +54,7 @@ class GenreController extends Controller
 
     public function update(GenreRequest $request, Genre $genre): JsonResponse
     {
+        $this->authorize('update', $genre);
         $updated_genre = $this->genre_service->updateGenre($genre, $request->validated());
 
         return response()->json([
@@ -64,6 +66,7 @@ class GenreController extends Controller
 
     public function destroy(Genre $genre): JsonResponse
     {
+        $this->authorize('delete', $genre);
         $this->genre_service->deleteGenre($genre);
 
         return response()->json([

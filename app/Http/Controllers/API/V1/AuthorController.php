@@ -42,6 +42,7 @@ class AuthorController extends Controller
 
     public function store(AuthorRequest $request): JsonResponse
     {
+        $this->authorize('create', Author::class);
         $author = $this->author_service->createAuthor($request->validated());
 
         return response()->json([
@@ -53,6 +54,7 @@ class AuthorController extends Controller
 
     public function update(AuthorRequest $request, Author $author): JsonResponse
     {
+        $this->authorize('update', $author);
         $updated_author = $this->author_service->updateAuthor($author, $request->validated());
 
         return response()->json([
@@ -64,6 +66,7 @@ class AuthorController extends Controller
 
     public function destroy(Author $author): JsonResponse
     {
+        $this->authorize('update', $author);
         $this->author_service->deleteAuthor($author);
 
         return response()->json([

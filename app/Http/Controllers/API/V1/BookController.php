@@ -11,14 +11,14 @@ use Illuminate\Http\JsonResponse;
 
 class BookController extends Controller
 {
-    public function __construct(protected BookService $bookService)
+    public function __construct(protected BookService $book_service)
     {
         $this->middleware('auth:sanctum')->except(['index', 'show']);
     }
 
     public function index(): JsonResponse
     {
-        $books = $this->bookService->getPaginatedBooks(request()->all());
+        $books = $this->book_service->getPaginatedBooks(request()->all());
 
         return response()->json([
             'status' => 'success',
@@ -42,7 +42,8 @@ class BookController extends Controller
 
     public function store(BookRequest $request): JsonResponse
     {
-        $book = $this->bookService->createBook($request->validated());
+        $this->authorize('create', Book::class);
+        $book = $this->book_service->createBook($request->validated());
 
         return response()->json([
             'status' => 'success',
@@ -53,7 +54,8 @@ class BookController extends Controller
 
     public function update(BookRequest $request, Book $book): JsonResponse
     {
-        $updated_book = $this->bookService->updateBook($book, $request->validated());
+        $this->authorize('update', $book);
+        $updated_book = $this->book_service->updateBook($book, $request->validated());
 
         return response()->json([
             'status' => 'success',
@@ -64,7 +66,8 @@ class BookController extends Controller
 
     public function destroy(Book $book): JsonResponse
     {
-        $this->bookService->deleteBook($book);
+        $this->authorize('delete', $book);
+        $this->book_service->deleteBook($book);
 
         return response()->json([
             'status' => 'success',
