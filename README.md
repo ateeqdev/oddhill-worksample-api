@@ -1,61 +1,163 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Bookshelf API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A Laravel-based REST API for managing books, authors, and genres with role-based access control.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+-   **Books Management**: Create, read, update, delete books with title, ISBN, and description
+-   **Authors Management**: Manage book authors with full CRUD operations
+-   **Genres Management**: Organize books by genres
+-   **Authentication**: User login/logout with API tokens using Laravel Sanctum
+-   **Role-based Access**: Admin users can modify data, regular users can only view
+-   **Search Functionality**: Search books by title or ISBN, authors and genres by name
+-   **Relationships**: Books can have multiple authors and genres
+-   **API Resources**: Consistent JSON responses with proper error handling
+-   **Pagination**: Configurable pagination for list endpoints
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Installation
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Requirements
 
-## Learning Laravel
+-   PHP 8.3 or higher
+-   SQLite database
+-   Composer
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+1. **Clone the repository**
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```bash
+git clone <repository-url>
+cd bookshelf-api
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+2. **Install dependencies**
 
-## Laravel Sponsors
+```bash
+composer install
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+3. **Set up environment**
 
-### Premium Partners
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+4. **Run migrations**
 
-## Contributing
+```bash
+php artisan migrate
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+5. **Start the server**
 
-## Code of Conduct
+```bash
+php artisan serve
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Create Test Users
 
-## Security Vulnerabilities
+Run these commands in Laravel Tinker:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+php artisan tinker
+```
 
-## License
+```php
+// Create admin user
+App\Models\User::create([
+    'name' => 'Admin User',
+    'email' => 'ateeq@ateeqend.com',
+    'password' => bcrypt('password'),
+    'is_admin' => true
+]);
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+// Create regular user
+App\Models\User::create([
+    'name' => 'Regular User',
+    'email' => 'regular@ateeqend.com',
+    'password' => bcrypt('password'),
+    'is_admin' => false
+]);
+
+exit
+```
+
+## Testing with Postman
+
+1. Import `Bookshelf_API.postman_collection.json` into Postman
+2. Set `base_url` variable to your local URL (e.g., `http://localhost:8000`)
+3. Run the collection tests to verify all endpoints
+
+### Available Test Requests
+
+**Authentication:**
+
+-   Admin Login (Get Token)
+-   Regular User Login (Get Token)
+
+**Books (Public read access, Admin-only write access):**
+
+-   List Books (No Auth Required)
+-   Get Single Book (No Auth Required)
+-   Search Books by Title (No Auth Required)
+-   Search Books by ISBN (No Auth Required)
+-   Create Book - Regular User (Should Fail)
+-   Create Book - Admin User (Success)
+-   Update Book - Regular User (Should Fail)
+-   Update Book - Admin User (Success)
+-   Delete Book - Regular User (Should Fail)
+-   Delete Book - Admin User (Success)
+
+**Authors (Same access pattern as Books):**
+
+-   List, Get, Search, Create, Update, Delete operations
+-   Regular users: Read-only access
+-   Admin users: Full CRUD access
+
+**Genres (Same access pattern as Books):**
+
+-   List, Get, Search, Create, Update, Delete operations
+-   Regular users: Read-only access
+-   Admin users: Full CRUD access
+
+## Live Demo
+
+The API is deployed at <a href="https://api.ateeqend.com" target="_blank">**api.ateeqend.com**</a> with a web dashboard for testing all endpoints. The deployment is automated via Github actions. As soon as a change is made in the dev branch, the deployment gets triggered on my server.
+
+The included Postman collection is pre-configured to work with the live API without any setup (e.g. you don't need to change any variables, just download the collection, import it in your Postman and click run and it will start working).
+
+## Implementation Details
+
+This project was built incrementally with these key features:
+
+-   **Database Models**: Created Book, Author, Genre models with proper relationships
+-   **Authentication**: Integrated Laravel Sanctum for API token-based authentication
+-   **Database Structure**: Designed migrations for books, authors, genres, and their pivot tables
+-   **Data Seeding**: Added sample data through migrations for testing
+-   **API Endpoints**: Built RESTful controllers for all resources
+-   **Authorization**: Implemented role-based access using Laravel Policies. This will allow us to have granular control later on (e.g. if we want only those users who are the creators of a record to edit or delete them, we can easily do so via policies).
+-   **Request Validation**: Custom form requests for data validation
+-   **Service Layer**: BookService handles business logic separately from controllers
+-   **API Resources**: Consistent JSON response formatting
+-   **Configuration**: Custom API configuration for pagination and response structure
+-   **Testing Tools**: Postman collection and web dashboard for endpoint testing
+-   **Deployment**: Configured with Caddyfile and GitHub deployment scripts
+
+### Key Files Overview
+
+-   `config/api.php`: API configuration for pagination, response structure, and versioning
+-   `routes/api.php`: API route definitions with versioning support
+-   `app/Models/Book.php`: Book model with author and genre relationships
+-   `app/Http/Requests/BookRequest.php`: Request validation with custom error handling
+-   `app/Http/Controllers/API/V1/BookController.php`: RESTful controller with authorization
+-   `app/Services/BookService.php`: Business logic for book operations
+-   `app/Http/Resources/BookResource.php`: JSON response formatting
+-   Similar for other tables (Authors, Genres etc)
+
+## Potential Improvements
+
+-   The CRUD operations follow similar patterns and could be abstracted into a reusable Laravel package.
+-   Such a package would allow configuration per model (e.g., searchable fields) and route setup with minimal code.
+-   I chose not to go this route to avoid overengineering and scope creep.
+-   The `api-test.blade.php` dashboard is messy, with repetition and all logic in one file. It is violating the single responsibility principle.
+-   It was added solely to simplify testing for you.
