@@ -1,0 +1,35 @@
+:8080 {
+    # Document root
+    root * /var/www/html/oddhill-worksample-api/public
+    
+    # Enable file serving first
+    file_server
+    
+    # Handle PHP files with FrankenPHP
+    @phpFiles {
+        path *.php
+    }
+    handle @phpFiles {
+        # FrankenPHP handles PHP natively, no fastcgi needed
+        php
+    }
+    
+    # Enable gzip compression
+    encode gzip
+    
+    # Log access for debugging
+    log {
+        output file /var/log/caddy/api.ateeqend.com.access.log
+        format console
+    }
+    
+    # Handle Laravel/PHP framework routing (catch-all for non-existing files)
+    @notFile {
+        not file
+    }
+    handle @notFile {
+        rewrite * /index.php{uri}
+        php
+    }
+}
+
