@@ -122,9 +122,9 @@ exit
 
 ## Live Demo
 
-The API is deployed at <a href="https://api.ateeqend.com" target="_blank">**api.ateeqend.com**</a> with a web dashboard for testing all endpoints. The deployment is automated via Github actions. As soon as a change is made in the dev branch, the deployment gets triggered on my server.
+The API is deployed at <a href="https://api.ateeqend.com" target="_blank">**api.ateeqend.com**</a> with a web dashboard for testing a few endpoints. The deployment is automated via Github actions. As soon as a change is made in the dev branch, the deployment gets triggered on my server.
 
-The included Postman collection is pre-configured to work with the live API without any setup (e.g. you don't need to change any variables, just download the collection, import it in your Postman and click run and it will start working).
+The included Postman collection (in public/ directory) is pre-configured to work with the live API without any setup (e.g. you don't need to change any variables, just download the collection, import it in your Postman and click run and it will start working).
 
 ## Implementation Details
 
@@ -156,6 +156,7 @@ This project was built incrementally with these key features:
 
 ## Potential Improvements
 
+-   In this project, searches are conducted by specifying a particular field (e.g., name=Rowling). However, in all of my API implementations, we follow a different approach: we use search=term, and the backend then checks across multiple searchable fields (such as name, isbn, id, etc.) to find matches.
 -   The CRUD operations follow similar patterns and could be abstracted into a reusable Laravel package.
 -   Such a package would allow configuration per model (e.g., searchable fields) and route setup with minimal code.
 -   I chose not to go this route to avoid overengineering and scope creep.
